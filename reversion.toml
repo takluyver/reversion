@@ -2,4 +2,8 @@ currentversion = "0.1"
 
 [[place]]
 file = "reversion/__init__.py"
-linematch = '__version__'
+line-regex = '__version__'
+
+[[place]]
+file = "docs/conf.py"
+line-regex = 'release'

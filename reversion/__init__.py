@@ -41,7 +41,7 @@ def read_config():
         if not isinstance(place['file'], str):
             raise ConfigError("file must be string")
 
-        if ('linematch' in place) and not isinstance(place['linematch'], str):
+        if ('line-regex' in place) and not isinstance(place['line-regex'], str):
             raise ConfigError("linematch must be string")
 
     return conf
@@ -53,7 +53,7 @@ def check():
 
     problems = []
     for place in conf['place']:
-        linematch = place.get('linematch', 'version')
+        linematch = place.get('line-regex', 'version')
         line_pattern = re.compile(linematch)
         match_lines = []
         try:
@@ -106,8 +106,7 @@ def update_version(changes):
     files_changed = []
     for place in (conf['place'] + [reversion_conf_place]):
         match_lines = []
-        linematch = place.get('linematch', 'version')
-        line_pattern = re.compile(linematch)
+        line_pattern = re.compile(place.get('line-regex', 'version'))
         file = place['file']
         contents = []
         files_changed.append((file, contents))
