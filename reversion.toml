@@ -1,0 +1,5 @@
+currentversion = "0.1"
+
+[[place]]
+file = "reversion/__init__.py"
+linematch = '__version__'
