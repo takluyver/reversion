@@ -1,3 +1,5 @@
+"""Easily update version numbers across your project.
+"""
 import argparse
 from functools import reduce
 import re
@@ -145,7 +147,7 @@ def main(argv=None):
 
     try:
         n = update_version(options.change)
-    except VersionMatchingError as e:
+    except (ConfigError, deltas.BadDelta, VersionMatchingError) as e:
         print('Error:', e)
     else:
         print('Updated version number in %d files' % n)

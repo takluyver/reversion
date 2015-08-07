@@ -3,6 +3,8 @@ import re
 
 part_pat = re.compile('(\d+|\.|[^\d.]+)')
 
+class BadDelta(ValueError): pass
+
 def add(current, increment):
     # Normalise the increment - insert zeros between consecutive .s
     increment = increment.replace('..', '.0.')
@@ -14,19 +16,19 @@ def add(current, increment):
     new_parts = []
 
     if len(increment_parsed) > len(current_parsed):
-        raise ValueError("Increment {!r} has more parts than version {!r}"
+        raise BadDelta("Increment {!r} has more parts than version {!r}"
                          .format(increment, current))
 
     for cp, ip in zip(current_parsed, increment_parsed):
         if ip.isdigit():
             if not cp.isdigit():
-                raise ValueError("Increment {!r} does not match version {!r}"
+                raise BadDelta("Increment {!r} does not match version {!r}"
                                  .format(increment, current))
             res = int(cp) + int(ip)
             new_parts.append(str(res))
 
         elif cp != ip:
-            raise ValueError("Increment {!r} does not match version {!r}"
+            raise BadDelta("Increment {!r} does not match version {!r}"
                              .format(increment, current))
         else:
             new_parts.append(cp)
@@ -55,5 +57,5 @@ def apply(current, delta):
     if delta == 'final':
         return final(current)
 
-    raise ValueError("Unrecognised change: {!r}. Changes should start with"
-                     "a number, + or ~, or be the word 'final'.")
+    raise BadDelta(("Unrecognised change: {!r}. Changes should start with "
+                 "a number, + or ~, or be the word 'final'.").format(delta))
