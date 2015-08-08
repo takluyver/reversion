@@ -19,21 +19,24 @@ def add(current, increment):
         raise BadDelta("Increment {!r} has more parts than version {!r}"
                          .format(increment, current))
 
+    incremented = False
     for cp, ip in zip(current_parsed, increment_parsed):
         if ip.isdigit():
             if not cp.isdigit():
                 raise BadDelta("Increment {!r} does not match version {!r}"
                                  .format(increment, current))
-            res = int(cp) + int(ip)
+            res = (0 if incremented else int(cp)) + int(ip)
             new_parts.append(str(res))
-
+            if int(ip) > 0:
+                incremented = True
         elif cp != ip:
             raise BadDelta("Increment {!r} does not match version {!r}"
                              .format(increment, current))
         else:
             new_parts.append(cp)
 
-    new_parts.extend(current_parsed[len(increment_parsed):])
+    for cp in current_parsed[len(increment_parsed):]:
+            new_parts.append('0' if cp.isdigit() else cp)
 
     return ''.join(new_parts)
 
