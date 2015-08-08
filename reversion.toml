@@ -1,4 +1,4 @@
-currentversion = "0.1"
+currentversion = "0.2"
 
 [[place]]
 file = "reversion/__init__.py"
